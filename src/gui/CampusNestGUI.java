@@ -1,166 +1,160 @@
 package gui;
+
+import services.RegistrationService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import services.RegistrationService;
-
 public class CampusNestGUI extends JFrame {
-
     private RegistrationService registrationService;
-
-    // Components for normal user registration
-    private JTextField nameField, emailField;
-    private JPasswordField passwordField;
-    private JLabel resultLabel;
-
-    // Components for property owner registration
-    private JTextField ownerNameField, ownerEmailField, propertyDetailsField;
-    private JPasswordField ownerPasswordField;
-
-    // Components for login
-    private JTextField loginEmailField;
-    private JPasswordField loginPasswordField;
-    private JLabel loginResultLabel;
+    private JTextField nameField, emailField, ownerNameField, ownerEmailField, loginEmailField;
+    private JPasswordField passwordField, ownerPasswordField, loginPasswordField;
+    private JTextArea propertyDetailsField;
+    private JLabel resultLabel, loginResultLabel;
 
     public CampusNestGUI() {
         registrationService = new RegistrationService();
-        setTitle("Campus Nest Registration");
-        setSize(720, 720);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridBagLayout());
-        setLocationRelativeTo(null); // Center the window
-
         createSelectionPage();
-        
+        setTitle("Campus Nest");
+        setSize(720, 720);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void createSelectionPage() {
-        // Clear the frame
-        getContentPane().removeAll();
+        getContentPane().removeAll(); // Clear existing components
+        setLayout(new GridBagLayout());
+        
+        JLabel titleLabel = new JLabel("Welcome to Campus Nest");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        addComponent(titleLabel, 0, 0, 2, 1);
 
-        JLabel label = new JLabel("Select User Type");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        addComponent(label, 0, 0, 2, 1);
+        JButton registerUserButton = new JButton("Register as Normal User");
+        registerUserButton.addActionListener(e -> createUserRegistrationPage());
+        addComponent(registerUserButton, 0, 1, 2, 1);
 
-        JButton normalUserButton = new JButton("Normal User");
-        normalUserButton.addActionListener(e -> showNormalUserRegistration());
-        addComponent(normalUserButton, 0, 1, 1, 1);
-
-        JButton propertyOwnerButton = new JButton("Property Owner");
-        propertyOwnerButton.addActionListener(e -> showPropertyOwnerRegistration());
-        addComponent(propertyOwnerButton, 1, 1, 1, 1);
+        JButton registerOwnerButton = new JButton("Register as Property Owner");
+        registerOwnerButton.addActionListener(e -> createOwnerRegistrationPage());
+        addComponent(registerOwnerButton, 0, 2, 2, 1);
 
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> showLoginPage());
-        addComponent(loginButton, 0, 2, 2, 1);
+        loginButton.addActionListener(e -> createLoginPage());
+        addComponent(loginButton, 0, 3, 2, 1);
 
         revalidate();
         repaint();
     }
 
-    private void showNormalUserRegistration() {
-        // Clear the frame
+    private void createUserRegistrationPage() {
         getContentPane().removeAll();
+        setLayout(new GridBagLayout());
 
-        JLabel label = new JLabel("Register Normal User");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        addComponent(label, 0, 0, 2, 1);
-
-        nameField = new JTextField(15);
-        emailField = new JTextField(15);
-        passwordField = new JPasswordField(15);
-        resultLabel = new JLabel("");
-
-        addComponent(new JLabel("Name:"), 0, 1, 1, 1);
-        addComponent(nameField, 1, 1, 1, 1);
-        addComponent(new JLabel("Email:"), 0, 2, 1, 1);
-        addComponent(emailField, 1, 2, 1, 1);
-        addComponent(new JLabel("Password:"), 0, 3, 1, 1);
-        addComponent(passwordField, 1, 3, 1, 1);
+        JLabel nameLabel = new JLabel("Name:");
+        nameField = new JTextField(20);
+        JLabel emailLabel = new JLabel("Email:");
+        emailField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordField = new JPasswordField(20);
 
         JButton registerButton = new JButton("Register");
         registerButton.addActionListener(new RegisterUserListener());
+        resultLabel = new JLabel();
+
+        addComponent(nameLabel, 0, 0, 1, 1);
+        addComponent(nameField, 1, 0, 1, 1);
+        addComponent(emailLabel, 0, 1, 1, 1);
+        addComponent(emailField, 1, 1, 1, 1);
+        addComponent(passwordLabel, 0, 2, 1, 1);
+        addComponent(passwordField, 1, 2, 1, 1);
         addComponent(registerButton, 0, 4, 2, 1);
-        
         addComponent(resultLabel, 0, 5, 2, 1);
+
         createBackButton();
 
         revalidate();
         repaint();
     }
 
-    private void showPropertyOwnerRegistration() {
-        // Clear the frame
+    private void createOwnerRegistrationPage() {
         getContentPane().removeAll();
+        setLayout(new GridBagLayout());
 
-        JLabel label = new JLabel("Register Property Owner");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        addComponent(label, 0, 0, 2, 1);
-
-        ownerNameField = new JTextField(15);
-        ownerEmailField = new JTextField(15);
-        ownerPasswordField = new JPasswordField(15);
-        propertyDetailsField = new JTextField(15);
-        resultLabel = new JLabel("");
-
-        addComponent(new JLabel("Name:"), 0, 1, 1, 1);
-        addComponent(ownerNameField, 1, 1, 1, 1);
-        addComponent(new JLabel("Email:"), 0, 2, 1, 1);
-        addComponent(ownerEmailField, 1, 2, 1, 1);
-        addComponent(new JLabel("Password:"), 0, 3, 1, 1);
-        addComponent(ownerPasswordField, 1, 3, 1, 1);
-        addComponent(new JLabel("Property Details:"), 0, 4, 1, 1);
-        addComponent(propertyDetailsField, 1, 4, 1, 1);
-
+        JLabel ownerNameLabel = new JLabel("Name:");
+        ownerNameField = new JTextField(20);
+        JLabel ownerEmailLabel = new JLabel("Email:");
+        ownerEmailField = new JTextField(20);
+        JLabel ownerPasswordLabel = new JLabel("Password:");
+        ownerPasswordField = new JPasswordField(20);
+        JLabel propertyDetailsLabel = new JLabel("Property Details:");
+        propertyDetailsField = new JTextArea(5, 20);
+        
         JButton registerButton = new JButton("Register");
         registerButton.addActionListener(new RegisterPropertyOwnerListener());
-        addComponent(registerButton, 0, 5, 2, 1);
-        
-        addComponent(resultLabel, 0, 6, 2, 1);
+        resultLabel = new JLabel();
+
+        addComponent(ownerNameLabel, 0, 0, 1, 1);
+        addComponent(ownerNameField, 1, 0, 1, 1);
+        addComponent(ownerEmailLabel, 0, 1, 1, 1);
+        addComponent(ownerEmailField, 1, 1, 1, 1);
+        addComponent(ownerPasswordLabel, 0, 2, 1, 1);
+        addComponent(ownerPasswordField, 1, 2, 1, 1);
+        addComponent(propertyDetailsLabel, 0, 3, 1, 1);
+        addComponent(new JScrollPane(propertyDetailsField), 1, 3, 1, 2);
+        addComponent(registerButton, 0, 6, 2, 1);
+        addComponent(resultLabel, 0, 7, 2, 1);
+
         createBackButton();
 
         revalidate();
         repaint();
     }
 
-    private void showLoginPage() {
-        // Clear the frame
+    private void createLoginPage() {
         getContentPane().removeAll();
+        setLayout(new GridBagLayout());
 
-        JLabel label = new JLabel("User Login");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        addComponent(label, 0, 0, 2, 1);
-
-        loginEmailField = new JTextField(15);
-        loginPasswordField = new JPasswordField(15);
-        loginResultLabel = new JLabel("");
-
-        addComponent(new JLabel("Email:"), 0, 1, 1, 1);
-        addComponent(loginEmailField, 1, 1, 1, 1);
-        addComponent(new JLabel("Password:"), 0, 2, 1, 1);
-        addComponent(loginPasswordField, 1, 2, 1, 1);
-
-        JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(new LoginUserListener());
-        addComponent(loginButton, 0, 3, 2, 1);
+        JLabel emailLabel = new JLabel("Email:");
+        loginEmailField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Password:");
+        loginPasswordField = new JPasswordField(20);
         
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(new LoginListener());
+        loginResultLabel = new JLabel();
+
+        addComponent(emailLabel, 0, 0, 1, 1);
+        addComponent(loginEmailField, 1, 0, 1, 1);
+        addComponent(passwordLabel, 0, 1, 1, 1);
+        addComponent(loginPasswordField, 1, 1, 1, 1);
+        addComponent(loginButton, 0, 3, 2, 1);
         addComponent(loginResultLabel, 0, 4, 2, 1);
+
         createBackButton();
 
         revalidate();
         repaint();
     }
 
-    private void createBackButton() {
-        JButton backButton = new JButton("Back");
-        backButton.addActionListener(e -> createSelectionPage());
-        addComponent(backButton, 0, 7, 2, 1);
+    private void createWelcomePage(String username) {
+        getContentPane().removeAll();
+        setLayout(new GridBagLayout());
+
+        JLabel welcomeLabel = new JLabel("Welcome, " + username + "!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        addComponent(welcomeLabel, 0, 0, 2, 1);
+
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(e -> createSelectionPage());
+        addComponent(logoutButton, 0, 1, 2, 1);
+
+        revalidate();
+        repaint();
     }
 
-    private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight) {
+    private void addComponent(Component comp, int gridx, int gridy, int gridwidth, int gridheight) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = gridx;
         gbc.gridy = gridy;
@@ -168,55 +162,61 @@ public class CampusNestGUI extends JFrame {
         gbc.gridheight = gridheight;
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
-        add(component, gbc);
+        add(comp, gbc);
     }
 
-    // Listener for normal user registration
     private class RegisterUserListener implements ActionListener {
-        @Override
         public void actionPerformed(ActionEvent e) {
             String name = nameField.getText();
             String email = emailField.getText();
             String password = new String(passwordField.getPassword());
 
-            if (registrationService.registerUser(name, email, password)) {
+            boolean isRegistered = registrationService.registerUser(name, email, password);
+            if (isRegistered) {
                 resultLabel.setText("Registration successful!");
+                createWelcomePage(name); // Navigate to welcome page
             } else {
-                resultLabel.setText("Email already exists!");
+                resultLabel.setText("Registration failed. Email may already exist.");
             }
         }
     }
 
-    // Listener for property owner registration
     private class RegisterPropertyOwnerListener implements ActionListener {
-        @Override
         public void actionPerformed(ActionEvent e) {
             String name = ownerNameField.getText();
             String email = ownerEmailField.getText();
             String password = new String(ownerPasswordField.getPassword());
             String propertyDetails = propertyDetailsField.getText();
 
-            if (registrationService.registerPropertyOwner(name, email, password, propertyDetails)) {
+            boolean isRegistered = registrationService.registerPropertyOwner(name, email, password, propertyDetails);
+            if (isRegistered) {
                 resultLabel.setText("Property Owner registration successful!");
+                createWelcomePage(name); // Navigate to welcome page
             } else {
-                resultLabel.setText("Registration failed!");
+                resultLabel.setText("Registration failed.");
             }
         }
     }
 
-    // Listener for user login
-    private class LoginUserListener implements ActionListener {
-        @Override
+    private class LoginListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String email = loginEmailField.getText();
             String password = new String(loginPasswordField.getPassword());
 
-            if (registrationService.loginUser(email, password)) {
+            boolean isLoggedIn = registrationService.loginUser(email, password);
+            if (isLoggedIn) {
                 loginResultLabel.setText("Login successful!");
+                createWelcomePage(email); // Navigate to welcome page
             } else {
-                loginResultLabel.setText("Invalid email or password!");
+                loginResultLabel.setText("Login failed. Invalid credentials.");
             }
         }
+    }
+
+    private void createBackButton() {
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> createSelectionPage());
+        addComponent(backButton, 0, 8, 2, 1);
     }
 
     public static void main(String[] args) {
