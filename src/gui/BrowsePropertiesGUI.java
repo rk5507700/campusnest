@@ -34,20 +34,22 @@ public class BrowsePropertiesGUI extends JFrame {
         addComponent(scrollPane, 0, 1, 2, 4);
 
         JButton addToFavoritesButton = new JButton("Add to Favorites");
+        addToFavoritesButton.setFont(new Font("Arial", Font.BOLD, 15));
         addToFavoritesButton.addActionListener(e -> {
             String selectedProperty = propertyList.getSelectedValue();
             propertyService.addToFavorites(userEmail, selectedProperty);
         });
         addComponent(addToFavoritesButton, 0, 6, 2, 1);
-
+        
         JButton backButton = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.BOLD, 15));
         backButton.addActionListener(e -> setVisible(false));
         addComponent(backButton, 0, 7, 2, 1);
-
+        
         revalidate();
         repaint();
     }
-
+    
     private void addComponent(Component comp, int gridx, int gridy, int gridwidth, int gridheight) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = gridx;

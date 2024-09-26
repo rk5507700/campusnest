@@ -40,27 +40,30 @@ public class PropertiesByOwnerGUI extends JFrame {
         
 
         JButton deleteButton = new JButton("Delete Property");
+        deleteButton.setFont(new Font("Arial", Font.BOLD, 15));
         deleteButton.addActionListener(e -> {
             String selectedProperty = propertyList.getSelectedValue();
             propertyService.deleteProperty(selectedProperty);
         });
         addComponent(deleteButton, 0, 6, 2, 1);
-
+        
         JButton VisibilityButton = new JButton("Visibilitiy");
+        VisibilityButton.setFont(new Font("Arial", Font.BOLD, 15));
         VisibilityButton.addActionListener(e -> {
             String selectedProperty = propertyList.getSelectedValue();
             propertyService.updateVisibility(selectedProperty);
         });
         addComponent(VisibilityButton, 0, 7, 2, 1);
-
+        
         JButton backButton = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.BOLD, 15));
         backButton.addActionListener(e -> setVisible(false));
         addComponent(backButton, 0, 8, 2, 1);
-
+        
         revalidate();
         repaint();
     }
-
+    
     private void addComponent(Component comp, int gridx, int gridy, int gridwidth, int gridheight) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = gridx;
