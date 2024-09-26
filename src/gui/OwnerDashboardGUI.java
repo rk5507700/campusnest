@@ -19,6 +19,11 @@ public class OwnerDashboardGUI extends JFrame {
         createDashboard();
     }
 
+    private void browseProperties(){
+        PropertiesByOwnerGUI propertiesByOwnerGUI = new PropertiesByOwnerGUI(ownerEmail);
+        propertiesByOwnerGUI.setVisible(true);
+    }
+
     private void createDashboard() {
         getContentPane().removeAll();
         setLayout(new GridBagLayout());
@@ -31,13 +36,9 @@ public class OwnerDashboardGUI extends JFrame {
         addPropertyButton.addActionListener(e -> listNewProperty());
         addComponent(addPropertyButton, 0, 1, 2, 1);
 
-        JButton deletePropertyButton = new JButton("Delete Property");
-        deletePropertyButton.addActionListener(e -> deleteProperty());
-        addComponent(deletePropertyButton, 0, 2, 2, 1);
-
-        JButton hidePropertyButton = new JButton("Hide/Show Property");
-        hidePropertyButton.addActionListener(e -> hideProperty());
-        addComponent(hidePropertyButton, 0, 3, 2, 1);
+        JButton browseButton = new JButton("Browse Properties");
+        browseButton.addActionListener(e -> browseProperties());
+        addComponent(browseButton, 0, 2, 2, 1);
 
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(e -> logout());
@@ -53,6 +54,7 @@ public class OwnerDashboardGUI extends JFrame {
 
     private void deleteProperty() {
         // Logic to delete a property
+
     }
 
     private void hideProperty() {
