@@ -73,9 +73,9 @@ public class CampusNestGUI extends JFrame {
         addComponent(passwordLabel, 0, 2, 1, 1);
         addComponent(passwordField, 1, 2, 1, 1);
         addComponent(registerButton, 0, 4, 2, 1);
-        addComponent(resultLabel, 0, 5, 2, 1);
+        addComponent(resultLabel, 0, 6, 2, 1);
 
-        createBackButton();
+        createBackButton(0, 5);
 
         revalidate();
         repaint();
@@ -107,9 +107,9 @@ public class CampusNestGUI extends JFrame {
         addComponent(propertyDetailsLabel, 0, 3, 1, 1);
         addComponent(new JScrollPane(propertyDetailsField), 1, 3, 1, 2);
         addComponent(registerButton, 0, 6, 2, 1);
-        addComponent(resultLabel, 0, 7, 2, 1);
+        addComponent(resultLabel, 0, 8, 2, 1);
 
-        createBackButton();
+        createBackButton(0, 7);
 
         revalidate();
         repaint();
@@ -131,6 +131,8 @@ public class CampusNestGUI extends JFrame {
         ownerLoginButton.addActionListener(e -> createLoginPage("owner"));
         addComponent(ownerLoginButton, 0, 2, 2, 1);
 
+        
+        createBackButton(0, 3);
         revalidate();
         repaint();
     }
@@ -155,7 +157,7 @@ public class CampusNestGUI extends JFrame {
         addComponent(loginButton, 0, 3, 2, 1);
         addComponent(loginResultLabel, 0, 4, 2, 1);
 
-        createBackButton();
+        createBackButton(0, 6);
 
         revalidate();
         repaint();
@@ -244,10 +246,10 @@ public class CampusNestGUI extends JFrame {
         }
     }
 
-    private void createBackButton() {
+    private void createBackButton(int x, int y) {
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> createSelectionPage());
-        addComponent(backButton, 0, 6, 2, 1);
+        addComponent(backButton, x, y, 2, 1);
     }
 
     public static void main(String[] args) {
