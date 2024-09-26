@@ -4,10 +4,16 @@ import services.PropertyService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import utils.DatabaseHelper;
 
 public class OwnerDashboardGUI extends JFrame {
     private PropertyService propertyService;
     private String ownerEmail;
+    private String name;
+    private DatabaseHelper dbHelper;
 
     public OwnerDashboardGUI(String email) {
         this.ownerEmail = email;
@@ -17,6 +23,7 @@ public class OwnerDashboardGUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         createDashboard();
+
     }
 
     private void browseProperties(){
@@ -31,25 +38,51 @@ public class OwnerDashboardGUI extends JFrame {
         JLabel titleLabel = new JLabel("Property Owner Dashboard");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         addComponent(titleLabel, 0, 0, 2, 1);
-
+        
         JButton addPropertyButton = new JButton("List New Property");
-        addPropertyButton.addActionListener(e -> listNewProperty());
+        addPropertyButton.addActionListener(e -> listNewPropertyPage());
         addComponent(addPropertyButton, 0, 1, 2, 1);
-
+        
         JButton browseButton = new JButton("Browse Properties");
         browseButton.addActionListener(e -> browseProperties());
         addComponent(browseButton, 0, 2, 2, 1);
-
+        
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(e -> logout());
         addComponent(logoutButton, 0, 4, 2, 1);
-
+        
         revalidate();
         repaint();
     }
-
-    private void listNewProperty() {
+    
+    private void listNewPropertyPage() {
         // Logic to list a new property
+        getContentPane().removeAll();
+        setLayout(new GridBagLayout());
+        
+        JLabel listNewPropertyLabel = new JLabel("+List New Property");
+        listNewPropertyLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        addComponent(listNewPropertyLabel, 0, 0, 2, 1);
+
+        JLabel propertyDetailsLabel = new JLabel("Property Details:");
+        JTextArea propertyDetailsField = new JTextArea(5, 20);
+        addComponent(new JScrollPane(propertyDetailsField), 0, 1, 1, 1);
+
+        JButton addButton = new JButton("Add Property");
+        addButton.addActionListener(e -> {
+            String property = propertyDetailsField.getText();
+            propertyService.addNewProperty(ownerEmail, property);
+        });
+        addComponent(addButton,0, 2, 1,1);
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> createDashboard());
+        addComponent(backButton,0, 3, 1, 1);
+
+        revalidate();
+        repaint();
+
+
     }
 
     private void deleteProperty() {

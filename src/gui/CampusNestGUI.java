@@ -91,8 +91,6 @@ public class CampusNestGUI extends JFrame {
         ownerEmailField = new JTextField(20);
         JLabel ownerPasswordLabel = new JLabel("Password:");
         ownerPasswordField = new JPasswordField(20);
-        JLabel propertyDetailsLabel = new JLabel("Property Details:");
-        propertyDetailsField = new JTextArea(5, 20);
         
         JButton registerButton = new JButton("Register");
         registerButton.addActionListener(new RegisterPropertyOwnerListener());
@@ -104,7 +102,6 @@ public class CampusNestGUI extends JFrame {
         addComponent(ownerEmailField, 1, 1, 1, 1);
         addComponent(ownerPasswordLabel, 0, 2, 1, 1);
         addComponent(ownerPasswordField, 1, 2, 1, 1);
-        addComponent(propertyDetailsLabel, 0, 3, 1, 1);
         addComponent(new JScrollPane(propertyDetailsField), 1, 3, 1, 2);
         addComponent(registerButton, 0, 6, 2, 1);
         addComponent(resultLabel, 0, 8, 2, 1);
@@ -208,10 +205,10 @@ public class CampusNestGUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             String name = ownerNameField.getText();
             String email = ownerEmailField.getText();
+            email = email.trim().toLowerCase();
             String password = new String(ownerPasswordField.getPassword());
-            String propertyDetails = propertyDetailsField.getText();
 
-            boolean isRegistered = registrationService.registerPropertyOwner(name, email, password, propertyDetails);
+            boolean isRegistered = registrationService.registerPropertyOwner(name, email, password);
             if (isRegistered) {
                 resultLabel.setText("Property Owner registration successful!");
                 createOwnerDashboard(email);

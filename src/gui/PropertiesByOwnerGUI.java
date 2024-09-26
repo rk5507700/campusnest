@@ -3,6 +3,8 @@ package gui;
 import services.PropertyService;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.*;
 import java.util.List;
 
@@ -31,8 +33,11 @@ public class PropertiesByOwnerGUI extends JFrame {
 
         List<String> properties = propertyService.getPropertiesByOwner(ownerEmail);
         JList<String> propertyList = new JList<>(properties.toArray(new String[0]));
+
         JScrollPane scrollPane = new JScrollPane(propertyList);
         addComponent(scrollPane, 0, 1, 2, 4);
+
+        
 
         JButton deleteButton = new JButton("Delete Property");
         deleteButton.addActionListener(e -> {

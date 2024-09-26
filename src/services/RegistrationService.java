@@ -29,14 +29,13 @@ public class RegistrationService {
         return false;
     }
 
-    public boolean registerPropertyOwner(String name, String email, String password, String propertyDetails) {
+    public boolean registerPropertyOwner(String name, String email, String password) {
         try (Connection conn = dbHelper.getConnection()) {
-            String query = "INSERT INTO property_owners (name, email, password, property_details) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO property_owners (name, email, password) VALUES (?, ?, ?)";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, name);
                 stmt.setString(2, email);
                 stmt.setString(3, password);
-                stmt.setString(4, propertyDetails);
                 stmt.executeUpdate();
                 return true;
             }
