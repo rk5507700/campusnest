@@ -1,6 +1,7 @@
 package gui;
 
 import services.RegistrationService;
+import services.PropertyService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 
 public class CampusNestGUI extends JFrame {
     private RegistrationService registrationService;
+    private PropertyService propertyService;
     private JTextField nameField, emailField, ownerNameField, ownerEmailField, loginEmailField;
     private JPasswordField passwordField, ownerPasswordField, loginPasswordField;
     private JTextArea propertyDetailsField;
@@ -16,6 +18,7 @@ public class CampusNestGUI extends JFrame {
 
     public CampusNestGUI() {
         registrationService = new RegistrationService();
+        propertyService = new PropertyService();
         createSelectionPage();
         setTitle("Campus Nest");
         setSize(720, 720);
@@ -25,14 +28,14 @@ public class CampusNestGUI extends JFrame {
     }
 
     private void createSelectionPage() {
-        getContentPane().removeAll(); // Clear existing components
+        getContentPane().removeAll();
         setLayout(new GridBagLayout());
         
         JLabel titleLabel = new JLabel("Welcome to Campus Nest");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         addComponent(titleLabel, 0, 0, 2, 1);
 
-        JButton registerUserButton = new JButton("Register as Normal User");
+        JButton registerUserButton = new JButton("Register as Tenant User");
         registerUserButton.addActionListener(e -> createUserRegistrationPage());
         addComponent(registerUserButton, 0, 1, 2, 1);
 
@@ -41,7 +44,7 @@ public class CampusNestGUI extends JFrame {
         addComponent(registerOwnerButton, 0, 2, 2, 1);
 
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> createLoginPage());
+        loginButton.addActionListener(e -> createLoginSelectionPage());
         addComponent(loginButton, 0, 3, 2, 1);
 
         revalidate();
@@ -112,7 +115,27 @@ public class CampusNestGUI extends JFrame {
         repaint();
     }
 
-    private void createLoginPage() {
+    private void createLoginSelectionPage() {
+        getContentPane().removeAll();
+        setLayout(new GridBagLayout());
+
+        JLabel titleLabel = new JLabel("Login as:");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        addComponent(titleLabel, 0, 0, 2, 1);
+
+        JButton userLoginButton = new JButton("Tenant User");
+        userLoginButton.addActionListener(e -> createLoginPage("user"));
+        addComponent(userLoginButton, 0, 1, 2, 1);
+
+        JButton ownerLoginButton = new JButton("Property Owner");
+        ownerLoginButton.addActionListener(e -> createLoginPage("owner"));
+        addComponent(ownerLoginButton, 0, 2, 2, 1);
+
+        revalidate();
+        repaint();
+    }
+
+    private void createLoginPage(String userType) {
         getContentPane().removeAll();
         setLayout(new GridBagLayout());
 
@@ -122,7 +145,7 @@ public class CampusNestGUI extends JFrame {
         loginPasswordField = new JPasswordField(20);
         
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(new LoginListener());
+        loginButton.addActionListener(new LoginListener(userType));
         loginResultLabel = new JLabel();
 
         addComponent(emailLabel, 0, 0, 1, 1);
@@ -138,20 +161,18 @@ public class CampusNestGUI extends JFrame {
         repaint();
     }
 
-    private void createWelcomePage(String username) {
+    private void createTenantDashboard(String email) {
         getContentPane().removeAll();
-        setLayout(new GridBagLayout());
+        TenantDashboardGUI tenantDashboard = new TenantDashboardGUI(email);
+        tenantDashboard.setVisible(true);
+        setVisible(false);
+    }
 
-        JLabel welcomeLabel = new JLabel("Welcome, " + username + "!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        addComponent(welcomeLabel, 0, 0, 2, 1);
-
-        JButton logoutButton = new JButton("Logout");
-        logoutButton.addActionListener(e -> createSelectionPage());
-        addComponent(logoutButton, 0, 1, 2, 1);
-
-        revalidate();
-        repaint();
+    private void createOwnerDashboard(String email) {
+        getContentPane().removeAll();
+        OwnerDashboardGUI ownerDashboard = new OwnerDashboardGUI(email);
+        ownerDashboard.setVisible(true);
+        setVisible(false);
     }
 
     private void addComponent(Component comp, int gridx, int gridy, int gridwidth, int gridheight) {
@@ -174,7 +195,7 @@ public class CampusNestGUI extends JFrame {
             boolean isRegistered = registrationService.registerUser(name, email, password);
             if (isRegistered) {
                 resultLabel.setText("Registration successful!");
-                createWelcomePage(name); // Navigate to welcome page
+                createTenantDashboard(email);
             } else {
                 resultLabel.setText("Registration failed. Email may already exist.");
             }
@@ -191,7 +212,7 @@ public class CampusNestGUI extends JFrame {
             boolean isRegistered = registrationService.registerPropertyOwner(name, email, password, propertyDetails);
             if (isRegistered) {
                 resultLabel.setText("Property Owner registration successful!");
-                createWelcomePage(name); // Navigate to welcome page
+                createOwnerDashboard(email);
             } else {
                 resultLabel.setText("Registration failed.");
             }
@@ -199,16 +220,26 @@ public class CampusNestGUI extends JFrame {
     }
 
     private class LoginListener implements ActionListener {
+        private String userType;
+
+        public LoginListener(String userType) {
+            this.userType = userType;
+        }
+
         public void actionPerformed(ActionEvent e) {
             String email = loginEmailField.getText();
             String password = new String(loginPasswordField.getPassword());
 
-            boolean isLoggedIn = registrationService.loginUser(email, password);
+            boolean isLoggedIn = registrationService.login(email, password, userType);
             if (isLoggedIn) {
                 loginResultLabel.setText("Login successful!");
-                createWelcomePage(email); // Navigate to welcome page
+                if (userType.equals("user")) {
+                    createTenantDashboard(email);
+                } else {
+                    createOwnerDashboard(email);
+                }
             } else {
-                loginResultLabel.setText("Login failed. Invalid credentials.");
+                loginResultLabel.setText("Login failed. Please check your credentials.");
             }
         }
     }
@@ -216,10 +247,10 @@ public class CampusNestGUI extends JFrame {
     private void createBackButton() {
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> createSelectionPage());
-        addComponent(backButton, 0, 8, 2, 1);
+        addComponent(backButton, 0, 6, 2, 1);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(CampusNestGUI::new);
+        new CampusNestGUI();
     }
 }
