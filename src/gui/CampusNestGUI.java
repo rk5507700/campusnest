@@ -283,8 +283,4 @@ public class CampusNestGUI extends JFrame {
             add(comp, gbc);
         }
     }
-
-    public static void main(String[] args) {
-        new CampusNestGUI();
-    }
 }

@@ -63,7 +63,7 @@ public class OwnerDashboardGUI extends JFrame {
         getContentPane().removeAll();
         setLayout(new GridBagLayout());
         
-        JLabel listNewPropertyLabel = new JLabel("+List New Property");
+        JLabel listNewPropertyLabel = new JLabel("List New Property");
         listNewPropertyLabel.setFont(new Font("Arial", Font.BOLD, 24));
         addComponent(listNewPropertyLabel, 0, 0, 2, 1);
         
@@ -90,14 +90,6 @@ public class OwnerDashboardGUI extends JFrame {
         
     }
     
-    private void deleteProperty() {
-        // Logic to delete a property
-        
-    }
-    
-    private void hideProperty() {
-        // Logic to hide or show a property
-    }
     
     private void logout() {
         CampusNestGUI mainGui = new CampusNestGUI();
