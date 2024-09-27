@@ -16,7 +16,7 @@ public class CampusNestGUI extends JFrame {
     private JTextArea propertyDetailsField;
     private JLabel resultLabel, loginResultLabel;
 
-    private ImageIcon BgImage = new ImageIcon("src/gui/imgs/MainPageBG.jpeg");
+    private ImageIcon BgImage = new ImageIcon("src/imgs/MainPageBG.jpeg");
     private Image BgImage_C = BgImage.getImage();
 
 
